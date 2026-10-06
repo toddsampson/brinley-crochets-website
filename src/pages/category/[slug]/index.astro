@@ -1,0 +1,18 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import PostList from '../../../components/PostList.astro';
+import { getCategoryPages, type Category, type PostPage } from '../../../utils/posts';
+
+export async function getStaticPaths() {
+  return (await getCategoryPages()).map(({ category, pages }) => ({
+    params: { slug: category.id },
+    props: { category, page: pages[0] },
+  }));
+}
+
+const { category, page } = Astro.props as { category: Category; page: PostPage };
+---
+
+<Layout title={category.data.title} description={category.data.description ?? undefined} activeNav={category.id}>
+  <PostList page={page} heading={category.data.title} description={category.data.description} />
+</Layout>

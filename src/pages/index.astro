@@ -1,0 +1,11 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PostList from '../components/PostList.astro';
+import { getPosts, paginatePosts } from '../utils/posts';
+
+const [page] = paginatePosts(await getPosts(), '/');
+---
+
+<Layout activeNav="all">
+  <PostList page={page} />
+</Layout>

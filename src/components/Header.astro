@@ -1,0 +1,71 @@
+---
+import site from '../data/site.json';
+import { getCategoryMap } from '../utils/posts';
+
+interface Props {
+  activeNav?: string;
+}
+
+const { activeNav } = Astro.props;
+const categoryMap = await getCategoryMap();
+// Only show categories that still exist, in the order chosen in Site Settings.
+const navItems = [
+  { href: '/', label: 'All Posts', key: 'all' },
+  ...site.navCategories
+    .filter((slug) => categoryMap.has(slug))
+    .map((slug) => ({ href: `/category/${slug}/`, label: categoryMap.get(slug)!.data.title, key: slug })),
+];
+const letters = [...site.title];
+---
+
+<header class="bg-white">
+  <div class="mx-auto max-w-6xl px-4 pb-6 pt-10 text-center">
+    <a href="/" class="inline-block" aria-label={`${site.title} home`}>
+      <span class="rainbow block font-serif text-5xl font-bold tracking-wide sm:text-6xl">
+        {letters.map((ch) => (ch === ' ' ? <span>&nbsp;</span> : <span>{ch}</span>))}
+      </span>
+    </a>
+    {site.tagline && <p class="mt-2 text-sm uppercase tracking-[0.2em] text-ink/60">{site.tagline}</p>}
+  </div>
+
+  <nav class="border-y border-blush-deep bg-blush" aria-label="Categories">
+    <div class="mx-auto max-w-6xl px-4">
+      <button
+        id="nav-toggle"
+        class="flex w-full items-center justify-center gap-2 py-3 text-sm font-bold uppercase tracking-widest text-teal-dark sm:hidden"
+        aria-expanded="false"
+        aria-controls="nav-list"
+      >
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18" /></svg>
+        Menu
+      </button>
+      <ul id="nav-list" class="hidden flex-col items-center pb-3 sm:flex sm:flex-row sm:flex-wrap sm:justify-center sm:pb-0">
+        {navItems.map((item) => (
+          <li>
+            <a
+              href={item.href}
+              class:list={[
+                'block px-4 py-3 text-sm font-bold uppercase tracking-widest hover:text-teal',
+                activeNav === item.key ? 'text-teal underline decoration-2 underline-offset-8' : 'text-ink/80',
+              ]}
+              aria-current={activeNav === item.key ? 'page' : undefined}
+            >
+              {item.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </nav>
+</header>
+
+<script>
+  const toggle = document.getElementById('nav-toggle');
+  const list = document.getElementById('nav-list');
+  toggle?.addEventListener('click', () => {
+    const open = toggle.getAttribute('aria-expanded') === 'true';
+    toggle.setAttribute('aria-expanded', String(!open));
+    list?.classList.toggle('hidden', open);
+    list?.classList.toggle('flex', !open);
+  });
+</script>

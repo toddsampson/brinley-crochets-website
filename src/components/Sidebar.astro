@@ -1,0 +1,50 @@
+---
+import site from '../data/site.json';
+import SocialLinks from './SocialLinks.astro';
+import { getCategoryMap, getPosts } from '../utils/posts';
+
+const [posts, categoryMap] = await Promise.all([getPosts(), getCategoryMap()]);
+const counts = new Map<string, number>();
+for (const post of posts) {
+  for (const slug of post.data.categories) counts.set(slug, (counts.get(slug) ?? 0) + 1);
+}
+const categories = [...categoryMap.values()]
+  .map((c) => ({ slug: c.id, title: c.data.title, count: counts.get(c.id) ?? 0 }))
+  .filter((c) => c.count > 0)
+  .sort((a, b) => a.title.localeCompare(b.title));
+const hasSocial = Object.values(site.social).some(Boolean);
+---
+
+<aside class="space-y-8">
+  <section class="widget text-center">
+    <h2 class="widget-title">About Me</h2>
+    {site.aboutImage && (
+      <img src={site.aboutImage} alt={site.aboutTitle} class="mx-auto mb-4 h-40 w-40 rounded-full object-cover ring-4 ring-blush" loading="lazy" />
+    )}
+    {site.aboutTitle && <h3 class="mb-2 text-lg font-bold">{site.aboutTitle}</h3>}
+    <p class="text-sm leading-relaxed text-ink/80">{site.aboutText}</p>
+  </section>
+
+  {hasSocial && (
+    <section class="widget">
+      <h2 class="widget-title">Follow Along</h2>
+      <SocialLinks />
+    </section>
+  )}
+
+  {categories.length > 0 && (
+    <section class="widget">
+      <h2 class="widget-title">Categories</h2>
+      <ul class="divide-y divide-blush">
+        {categories.map((c) => (
+          <li>
+            <a href={`/category/${c.slug}/`} class="flex justify-between py-2 text-sm hover:text-teal">
+              <span>{c.title}</span>
+              <span class="text-ink/50">({c.count})</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )}
+</aside>

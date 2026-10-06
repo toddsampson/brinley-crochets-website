@@ -1,0 +1,147 @@
+# Sveltia CMS configuration (Decap CMS compatible)
+# Online:  https://brinleycrochets.com/admin  → "Sign in with Token" (GitHub fine-grained token)
+# Locally: npm run dev → http://localhost:4321/admin → "Work with Local Repository" (Chrome/Edge)
+backend:
+  name: github
+  repo: toddsampson/brinley-crochets-website
+  branch: main
+  commit_messages:
+    create: "Create {{collection}} “{{slug}}”"
+    update: "Update {{collection}} “{{slug}}”"
+    delete: "Delete {{collection}} “{{slug}}”"
+    uploadMedia: "Upload “{{path}}”"
+    deleteMedia: "Delete “{{path}}”"
+
+site_url: https://brinleycrochets.com
+display_url: https://brinleycrochets.com
+logo:
+  src: /favicon.svg
+
+# Images and pattern PDFs both live here
+media_folder: public/uploads
+public_folder: /uploads
+
+# Turn titles like "Pokémon Pikachu!" into clean URLs like "pokemon-pikachu"
+slug:
+  encoding: ascii
+  clean_accents: true
+  sanitize_replacement: "-"
+
+collections:
+  - name: posts
+    label: Posts
+    label_singular: Post
+    description: Blog posts, newest first on the home page. Each post gets its own page at /posts/<url>/.
+    folder: src/content/posts
+    create: true
+    delete: true
+    slug: "{{slug}}"
+    extension: md
+    format: frontmatter
+    summary: "{{title}} — {{pubDate | date('YYYY-MM-DD')}}{{draft | ternary(' (draft)', '')}}"
+    sortable_fields: [pubDate, title]
+    view_filters:
+      - { label: Drafts, field: draft, pattern: true }
+      - { label: Published, field: draft, pattern: false }
+    fields:
+      - { label: Title, name: title, widget: string }
+      - { label: Publish Date, name: pubDate, widget: datetime }
+      - label: Draft
+        name: draft
+        widget: boolean
+        default: false
+        hint: Drafts are saved but not shown on the website.
+      - label: Categories
+        name: categories
+        widget: relation
+        collection: categories
+        value_field: "{{slug}}"
+        search_fields: [title]
+        display_fields: [title]
+        multiple: true
+        required: false
+      - label: Thumbnail / Hero Image
+        name: heroImage
+        widget: image
+        required: false
+        hint: Shown on the home page card and at the top of the post.
+      - label: Excerpt
+        name: excerpt
+        widget: text
+        required: false
+        hint: One or two sentences shown on the home page card.
+      - label: YouTube Videos
+        name: videos
+        widget: list
+        required: false
+        summary: "{{title}} {{url}}"
+        hint: Paste the YouTube link (from the Share button or the address bar).
+        fields:
+          - { label: YouTube URL, name: url, widget: string }
+          - { label: Caption, name: title, widget: string, required: false }
+      - label: Pattern PDFs
+        name: patterns
+        widget: list
+        required: false
+        summary: "{{title}}"
+        hint: Upload PDF patterns. They appear in a "Download the Pattern" box at the end of the post.
+        fields:
+          - { label: Pattern Name, name: title, widget: string }
+          - { label: PDF File, name: file, widget: file, accept: "application/pdf,.pdf" }
+      - label: Last Updated
+        name: updatedDate
+        widget: datetime
+        required: false
+        hint: Optional. Set this if you make a big change to a pattern.
+      - { label: Post, name: body, widget: markdown }
+
+  - name: categories
+    label: Categories
+    label_singular: Category
+    description: Categories for posts. Choose which ones appear in the top menu (and their order) under Site Settings → Top Menu.
+    folder: src/content/categories
+    create: true
+    delete: true
+    slug: "{{slug}}"
+    extension: md
+    format: frontmatter
+    fields:
+      - { label: Name, name: title, widget: string }
+      - { label: Description, name: description, widget: text, required: false }
+
+  - name: settings
+    label: Site Settings
+    editor:
+      preview: false
+    files:
+      - name: site
+        label: Site Settings & Top Menu
+        file: src/data/site.json
+        format: json
+        fields:
+          - label: Top Menu Categories
+            name: navCategories
+            widget: list
+            hint: Drag to change the order. "All Posts" is always shown first.
+            field:
+              label: Category
+              name: category
+              widget: relation
+              collection: categories
+              value_field: "{{slug}}"
+              search_fields: [title]
+              display_fields: [title]
+          - { label: Site Title, name: title, widget: string }
+          - { label: Tagline, name: tagline, widget: string, required: false }
+          - { label: About Me Heading, name: aboutTitle, widget: string, required: false }
+          - { label: About Me Text, name: aboutText, widget: text, required: false }
+          - { label: About Me Photo, name: aboutImage, widget: image, required: false }
+          - label: Social Links
+            name: social
+            widget: object
+            hint: Paste full links (https://…). Leave blank to hide.
+            fields:
+              - { label: Instagram, name: instagram, widget: string, required: false }
+              - { label: YouTube, name: youtube, widget: string, required: false }
+              - { label: Pinterest, name: pinterest, widget: string, required: false }
+              - { label: Etsy, name: etsy, widget: string, required: false }

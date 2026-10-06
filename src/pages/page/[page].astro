@@ -1,0 +1,17 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import PostList from '../../components/PostList.astro';
+import { getPosts, paginatePosts, type PostPage } from '../../utils/posts';
+
+export async function getStaticPaths() {
+  return paginatePosts(await getPosts(), '/')
+    .slice(1)
+    .map((page) => ({ params: { page: String(page.pageNumber) }, props: { page } }));
+}
+
+const { page } = Astro.props as { page: PostPage };
+---
+
+<Layout title={`All Posts – Page ${page.pageNumber}`} activeNav="all">
+  <PostList page={page} />
+</Layout>

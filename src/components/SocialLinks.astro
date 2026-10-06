@@ -1,0 +1,21 @@
+---
+import site from '../data/site.json';
+
+const labels: Record<string, string> = {
+  instagram: 'Instagram',
+  youtube: 'YouTube',
+  pinterest: 'Pinterest',
+  etsy: 'Etsy',
+};
+const links = Object.entries(site.social).filter(([, url]) => url);
+---
+
+{links.length > 0 && (
+  <ul class="flex flex-wrap justify-center gap-2">
+    {links.map(([key, url]) => (
+      <li>
+        <a href={url} class="pill" target="_blank" rel="noopener">{labels[key] ?? key}</a>
+      </li>
+    ))}
+  </ul>
+)}

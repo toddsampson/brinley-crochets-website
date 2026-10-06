@@ -1,0 +1,59 @@
+@import url('https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Overpass:ital,wght@0,300;0,400;0,700;1,400&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    @apply bg-paper text-ink font-sans antialiased;
+  }
+  h1, h2, h3, h4 {
+    @apply font-serif text-ink;
+  }
+  a {
+    @apply transition-colors;
+  }
+}
+
+@layer components {
+  .pill {
+    @apply inline-block rounded-full bg-blush px-3 py-0.5 text-xs font-bold uppercase tracking-wide text-teal-dark hover:bg-blush-deep;
+  }
+  .widget {
+    @apply rounded-lg bg-white p-6 shadow-sm ring-1 ring-black/5;
+  }
+  .widget-title {
+    @apply mb-4 border-b-2 border-blush-deep pb-2 text-center font-serif text-xl font-bold;
+  }
+  .btn {
+    @apply inline-flex items-center gap-2 rounded-full bg-teal px-5 py-2 text-sm font-bold uppercase tracking-wide text-white hover:bg-teal-dark;
+  }
+}
+
+/* Rainbow wordmark, one colour per letter like 53stitches */
+.rainbow span:nth-child(7n + 1) { color: #e5546d; }
+.rainbow span:nth-child(7n + 2) { color: #f28c38; }
+.rainbow span:nth-child(7n + 3) { color: #e9b824; }
+.rainbow span:nth-child(7n + 4) { color: #5bb36a; }
+.rainbow span:nth-child(7n + 5) { color: #4f9da8; }
+.rainbow span:nth-child(7n + 6) { color: #5b7fd6; }
+.rainbow span:nth-child(7n + 7) { color: #a067c9; }
+
+/* Post body typography */
+.prose-post { @apply text-[1.075rem] leading-relaxed; }
+.prose-post > * + * { @apply mt-5; }
+.prose-post h2 { @apply mt-10 text-3xl font-bold; }
+.prose-post h3 { @apply mt-8 text-2xl font-bold; }
+.prose-post a { @apply text-teal underline decoration-blush-deep decoration-2 underline-offset-2 hover:text-teal-dark; }
+.prose-post ul { @apply list-disc pl-6; }
+.prose-post ol { @apply list-decimal pl-6; }
+.prose-post li + li { @apply mt-1; }
+.prose-post img { @apply mx-auto rounded-lg; }
+.prose-post blockquote { @apply border-l-4 border-blush-deep bg-blush/50 px-5 py-3 italic; }
+.prose-post table { @apply w-full border-collapse text-sm; }
+.prose-post th, .prose-post td { @apply border border-blush-deep px-3 py-2 text-left; }
+.prose-post th { @apply bg-blush; }
+.prose-post iframe { @apply aspect-video w-full rounded-lg; }
+.prose-post code { @apply rounded bg-blush px-1 text-sm; }
+.prose-post hr { @apply my-8 border-blush-deep; }

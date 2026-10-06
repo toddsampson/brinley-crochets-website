@@ -1,0 +1,13 @@
+---
+import site from '../data/site.json';
+import SocialLinks from './SocialLinks.astro';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="mt-10 border-t border-blush-deep bg-blush">
+  <div class="mx-auto max-w-6xl space-y-4 px-4 py-8 text-center text-sm text-ink/70">
+    <SocialLinks />
+    <p>&copy; {year} {site.title}. All patterns are for personal use.</p>
+  </div>
+</footer>

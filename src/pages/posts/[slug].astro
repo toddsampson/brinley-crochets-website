@@ -1,0 +1,104 @@
+---
+import { render } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import { fileName, formatDate, getCategoryMap, getPosts, getYouTubeId, type Post } from '../../utils/posts';
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+  // posts are newest first, so the "next" (newer) post is the previous array item
+  return posts.map((post, i) => ({
+    params: { slug: post.id },
+    props: { post, newer: posts[i - 1], older: posts[i + 1] },
+  }));
+}
+
+const { post, newer, older } = Astro.props as { post: Post; newer?: Post; older?: Post };
+const { Content } = await render(post);
+const categoryMap = await getCategoryMap();
+const { title, pubDate, updatedDate, excerpt, heroImage, categories, videos, patterns } = post.data;
+const embeds = videos
+  .map((v) => ({ ...v, id: getYouTubeId(v.url) }))
+  .filter((v): v is typeof v & { id: string } => Boolean(v.id));
+---
+
+<Layout title={title} description={excerpt ?? undefined} image={heroImage}>
+  <article class="rounded-lg bg-white p-6 shadow-sm ring-1 ring-black/5 sm:p-10">
+    <header class="mb-8 text-center">
+      {categories.length > 0 && (
+        <div class="mb-4 flex flex-wrap justify-center gap-1.5">
+          {categories.filter((slug) => categoryMap.has(slug)).map((slug) => (
+            <a href={`/category/${slug}/`} class="pill">{categoryMap.get(slug)!.data.title}</a>
+          ))}
+        </div>
+      )}
+      <h1 class="text-4xl font-bold leading-tight sm:text-5xl">{title}</h1>
+      <p class="mt-3 text-xs uppercase tracking-wider text-ink/50">
+        <time datetime={pubDate.toISOString()}>{formatDate(pubDate)}</time>
+        {updatedDate && <> · Updated <time datetime={updatedDate.toISOString()}>{formatDate(updatedDate)}</time></>}
+      </p>
+    </header>
+
+    {heroImage && <img src={heroImage} alt={title} class="mb-8 w-full rounded-lg object-cover" />}
+
+    {embeds.length > 0 && (
+      <div class="mb-8 space-y-6">
+        {embeds.map((video) => (
+          <figure>
+            <div class="aspect-video overflow-hidden rounded-lg bg-black">
+              <iframe
+                class="h-full w-full"
+                src={`https://www.youtube-nocookie.com/embed/${video.id}`}
+                title={video.title || title}
+                loading="lazy"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                referrerpolicy="strict-origin-when-cross-origin"
+                allowfullscreen
+              ></iframe>
+            </div>
+            {video.title && <figcaption class="mt-2 text-center text-sm italic text-ink/60">{video.title}</figcaption>}
+          </figure>
+        ))}
+      </div>
+    )}
+
+    <div class="prose-post">
+      <Content />
+    </div>
+
+    {patterns.length > 0 && (
+      <section class="mt-10 rounded-lg border-2 border-dashed border-blush-deep bg-blush/60 p-6">
+        <h2 class="mb-4 text-center text-2xl font-bold">Download the Pattern</h2>
+        <ul class="space-y-3">
+          {patterns.map((pattern) => (
+            <li class="flex flex-wrap items-center justify-between gap-3 rounded-lg bg-white p-4 shadow-sm">
+              <span class="flex items-center gap-3 font-bold">
+                <span class="rounded bg-teal px-2 py-1 text-xs text-white">PDF</span>
+                {pattern.title}
+              </span>
+              <a href={pattern.file} class="btn" download={fileName(pattern.file)} target="_blank" rel="noopener">
+                Download
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )}
+  </article>
+
+  {(older || newer) && (
+    <nav class="mt-8 grid gap-4 sm:grid-cols-2" aria-label="More posts">
+      {older ? (
+        <a href={`/posts/${older.id}/`} class="widget block hover:ring-teal">
+          <span class="text-xs uppercase tracking-wider text-ink/50">← Previous post</span>
+          <span class="mt-1 block font-serif text-lg font-bold">{older.data.title}</span>
+        </a>
+      ) : <span />}
+      {newer && (
+        <a href={`/posts/${newer.id}/`} class="widget block text-right hover:ring-teal">
+          <span class="text-xs uppercase tracking-wider text-ink/50">Next post →</span>
+          <span class="mt-1 block font-serif text-lg font-bold">{newer.data.title}</span>
+        </a>
+      )}
+    </nav>
+  )}
+</Layout>
