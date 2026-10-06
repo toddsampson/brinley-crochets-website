@@ -1,7 +1,13 @@
 ---
 import site from '../data/site.json';
 import SocialLinks from './SocialLinks.astro';
-import { getCategoryMap, getPosts } from '../utils/posts';
+import { formatDate, getCategoryMap, getPosts } from '../utils/posts';
+
+interface Props {
+  currentPostId?: string;
+}
+
+const { currentPostId } = Astro.props;
 
 const [posts, categoryMap] = await Promise.all([getPosts(), getCategoryMap()]);
 const counts = new Map<string, number>();
@@ -12,6 +18,17 @@ const categories = [...categoryMap.values()]
   .map((c) => ({ slug: c.id, title: c.data.title, count: counts.get(c.id) ?? 0 }))
   .filter((c) => c.count > 0)
   .sort((a, b) => a.title.localeCompare(b.title));
+// On post pages: other posts, ones sharing a category first, then newest.
+const MORE_POSTS = 5;
+const current = currentPostId ? posts.find((p) => p.id === currentPostId) : undefined;
+const morePosts = current
+  ? posts
+      .filter((p) => p.id !== current.id)
+      .map((p, i) => ({ p, i, shared: p.data.categories.some((c) => current.data.categories.includes(c)) }))
+      .sort((a, b) => Number(b.shared) - Number(a.shared) || a.i - b.i)
+      .slice(0, MORE_POSTS)
+      .map(({ p }) => p)
+  : [];
 const hasSocial = Object.values(site.social).some(Boolean);
 ---
 
@@ -24,6 +41,31 @@ const hasSocial = Object.values(site.social).some(Boolean);
     {site.aboutTitle && <h3 class="mb-2 text-lg font-bold">{site.aboutTitle}</h3>}
     <p class="text-sm leading-relaxed text-ink/80">{site.aboutText}</p>
   </section>
+
+  {morePosts.length > 0 && (
+    <section class="widget">
+      <h2 class="widget-title">More Posts</h2>
+      <ul class="space-y-4">
+        {morePosts.map((p) => (
+          <li>
+            <a href={`/posts/${p.id}/`} class="group flex items-center gap-3">
+              <span class="block aspect-card w-24 shrink-0 overflow-hidden rounded bg-blush">
+                {p.data.heroImage ? (
+                  <img src={p.data.heroImage} alt="" class="h-full w-full object-cover" loading="lazy" />
+                ) : (
+                  <span class="flex h-full items-center justify-center text-2xl" aria-hidden="true">🧶</span>
+                )}
+              </span>
+              <span>
+                <span class="block font-serif text-base font-bold leading-snug group-hover:text-teal">{p.data.title}</span>
+                <span class="mt-1 block text-xs text-ink/50">{formatDate(p.data.pubDate)}</span>
+              </span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )}
 
   {hasSocial && (
     <section class="widget">

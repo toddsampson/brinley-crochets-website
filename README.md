@@ -17,12 +17,16 @@ Each time you click **Save**, the CMS commits your change to GitHub and the webs
 - **About Me, tagline and social links** are also in *Site Settings*.
 
 ### One-time access setup
-1. Brinley creates a free GitHub account. Todd adds her as a collaborator: repo **Settings → Collaborators → Add people**.
-2. She creates a token at https://github.com/settings/personal-access-tokens/new:
-   - **Repository access:** Only select repositories → `toddsampson/brinley-crochets-website`
-   - **Permissions:** Contents → **Read and write**
-   - **Expiration:** up to 1 year. Make a new token when it expires.
-3. She pastes the token on the `/admin` sign-in screen. The browser remembers it.
+GitHub's fine-grained tokens can only reach repos owned by the token creator's account (or an org). They can't reach someone else's personal repo you're only a collaborator on, so **Todd creates the token**:
+
+1. Signed in as `toddsampson`, open https://github.com/settings/personal-access-tokens/new. (Or go to Settings → Developer settings → Personal access tokens → Fine-grained tokens → Generate new token.)
+2. **Token name:** e.g. `Brinley CMS`. **Expiration:** up to 1 year. **Resource owner:** `toddsampson`.
+3. **Repository access:** *Only select repositories* → `brinley-crochets-website`.
+4. **Permissions → Repository permissions → Contents:** **Read and write**. Metadata (read-only) is added automatically. Leave everything else as *No access*.
+5. Click **Generate token**, copy it (it's only shown once), and give it to Brinley privately.
+6. She pastes it on the `/admin` sign-in screen. Her browser remembers it.
+
+Her edits are committed as Todd. When the token expires, generate a new one the same way. To cut off access, delete the token on the same settings page.
 
 ## For developers
 

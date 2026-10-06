@@ -23,7 +23,7 @@ const categoryMap = await getCategoryMap();
 {page.posts.length === 0 ? (
   <p class="widget text-center text-ink/70">No posts here yet — check back soon! 🧶</p>
 ) : (
-  <div class="grid gap-8 sm:grid-cols-2">
+  <div class="space-y-8">
     {page.posts.map((post) => <PostCard post={post} categoryMap={categoryMap} />)}
   </div>
 )}

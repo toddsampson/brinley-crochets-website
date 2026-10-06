@@ -21,7 +21,7 @@ const embeds = videos
   .filter((v): v is typeof v & { id: string } => Boolean(v.id));
 ---
 
-<Layout title={title} description={excerpt ?? undefined} image={heroImage}>
+<Layout title={title} description={excerpt ?? undefined} image={heroImage} currentPostId={post.id}>
   <article class="rounded-lg bg-white p-6 shadow-sm ring-1 ring-black/5 sm:p-10">
     <header class="mb-8 text-center">
       {categories.length > 0 && (
