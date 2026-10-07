@@ -1,18 +1,18 @@
 ---
-title: "Welcome to Brinley Crochets!"
+title: Welcome to Brinley Crochets!
 pubDate: 2026-10-06T12:00:00.000-04:00
-excerpt: "My very first post! Here's what you'll find on this blog: free patterns, video tutorials and lots of cute crochet."
-heroImage: ""
 draft: false
 categories:
-  - tutorials
   - free-patterns
+heroImage: ''
+excerpt: "My very first post! Here's what you'll find on this blog: free patterns, video tutorials and lots of cute crochet."
 videos:
-  - url: "https://www.youtube.com/watch?v=aAxGTnVNJiE"
-    title: "How to Crochet for Absolute Beginners (example video)"
+  - url: https://www.youtube.com/watch?v=aAxGTnVNJiE
+    title: How to Crochet for Absolute Beginners (example video)
 patterns:
-  - title: "Sample Pattern (PDF)"
-    file: "/uploads/sample-pattern.pdf"
+  - title: Sample Pattern (PDF)
+    file: /uploads/sample-pattern.pdf
+updatedDate: ''
 ---
 
 Welcome to my crochet blog! 🧶
