@@ -21,6 +21,10 @@ logo:
 media_folder: public/uploads
 public_folder: /uploads
 
+# Leave blank optional fields out of saved files instead of writing ''
+output:
+  omit_empty_optional_fields: true
+
 # Turn titles like "Pokémon Pikachu!" into clean URLs like "pokemon-pikachu"
 slug:
   encoding: ascii

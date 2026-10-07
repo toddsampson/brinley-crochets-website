@@ -50,6 +50,8 @@ npm run typecheck
 | `public/admin/` | Sveltia CMS (`index.html` and `config.yml`) |
 | `src/utils/posts.ts` | Post queries, pagination (12 per page) and YouTube ID parsing |
 
+The CMS version is pinned in `public/admin/index.html` (`@sveltia/cms@x.y.z`) so a bad upstream release can't affect the admin. To upgrade, bump that version after checking the [release notes](https://github.com/sveltia/sveltia-cms/releases).
+
 Don't add a `src/pages/admin/` route. Its build output would overwrite `public/admin/index.html`. In dev, `/admin/` is served by a small rewrite in `astro.config.mjs`.
 
 ### Domain and DNS (Cloudflare)
