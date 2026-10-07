@@ -1,4 +1,9 @@
 {
+  "navCategories": [
+    "pokemon",
+    "amigurumi",
+    "free-patterns"
+  ],
   "title": "Brinley Crochets",
   "tagline": "Free crochet patterns, amigurumi & tutorials",
   "aboutTitle": "Hi, I'm Brinley!",
@@ -9,6 +14,5 @@
     "youtube": "",
     "pinterest": "",
     "etsy": ""
-  },
-  "navCategories": ["pokemon", "amigurumi", "free-patterns", "tutorials"]
+  }
 }
