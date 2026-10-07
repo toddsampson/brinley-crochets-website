@@ -1,18 +1,23 @@
 import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
 
+// The CMS saves blank optional fields as '' — treat those as "not set".
+const blank = (v: unknown) => (v === '' || v === null ? undefined : v);
+const optionalString = z.preprocess(blank, z.string().optional());
+const optionalDate = z.preprocess(blank, z.coerce.date().optional());
+
 const posts = defineCollection({
   loader: glob({ base: './src/content/posts', pattern: '**/*.{md,mdx}' }),
   schema: z.object({
     title: z.string(),
     pubDate: z.coerce.date(),
-    updatedDate: z.coerce.date().optional().nullable(),
-    excerpt: z.string().optional().nullable(),
-    heroImage: z.string().optional().nullable(),
-    draft: z.boolean().default(false),
-    categories: z.array(z.string()).default([]),
+    updatedDate: optionalDate,
+    excerpt: optionalString,
+    heroImage: optionalString,
+    draft: z.preprocess(blank, z.boolean().default(false)),
+    categories: z.preprocess(blank, z.array(z.string()).default([])),
     videos: z
-      .array(z.object({ url: z.string(), title: z.string().optional().nullable() }))
+      .array(z.object({ url: z.string(), title: optionalString }))
       .default([]),
     patterns: z
       .array(z.object({ title: z.string(), file: z.string() }))
@@ -24,7 +29,7 @@ const categories = defineCollection({
   loader: glob({ base: './src/content/categories', pattern: '**/*.{md,mdx}' }),
   schema: z.object({
     title: z.string(),
-    description: z.string().optional().nullable(),
+    description: optionalString,
   }),
 });
 
