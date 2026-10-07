@@ -143,5 +143,6 @@ collections:
             fields:
               - { label: Instagram, name: instagram, widget: string, required: false }
               - { label: YouTube, name: youtube, widget: string, required: false }
+              - { label: TikTok, name: tiktok, widget: string, required: false }
               - { label: Pinterest, name: pinterest, widget: string, required: false }
               - { label: Etsy, name: etsy, widget: string, required: false }
