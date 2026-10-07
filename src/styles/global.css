@@ -31,15 +31,6 @@
   }
 }
 
-/* Rainbow wordmark, one colour per letter like 53stitches */
-.rainbow span:nth-child(7n + 1) { color: #e5546d; }
-.rainbow span:nth-child(7n + 2) { color: #f28c38; }
-.rainbow span:nth-child(7n + 3) { color: #e9b824; }
-.rainbow span:nth-child(7n + 4) { color: #5bb36a; }
-.rainbow span:nth-child(7n + 5) { color: #4f9da8; }
-.rainbow span:nth-child(7n + 6) { color: #5b7fd6; }
-.rainbow span:nth-child(7n + 7) { color: #a067c9; }
-
 /* Post body typography */
 .prose-post { @apply text-[1.075rem] leading-relaxed; }
 .prose-post > * + * { @apply mt-5; }

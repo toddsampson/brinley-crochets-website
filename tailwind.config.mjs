@@ -12,6 +12,7 @@ export default {
         blush: {
           DEFAULT: '#ffebed',
           deep: '#ffd8db',
+          logo: '#ec8a9c',
         },
         ink: '#313131',
         paper: '#FAFAFA',

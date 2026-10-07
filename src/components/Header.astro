@@ -15,15 +15,12 @@ const navItems = [
     .filter((slug) => categoryMap.has(slug))
     .map((slug) => ({ href: `/category/${slug}/`, label: categoryMap.get(slug)!.data.title, key: slug })),
 ];
-const letters = [...site.title];
 ---
 
 <header class="bg-white">
   <div class="mx-auto max-w-6xl px-4 pb-6 pt-10 text-center">
     <a href="/" class="inline-block" aria-label={`${site.title} home`}>
-      <span class="rainbow block font-serif text-5xl font-bold tracking-wide sm:text-6xl">
-        {letters.map((ch) => (ch === ' ' ? <span>&nbsp;</span> : <span>{ch}</span>))}
-      </span>
+      <span class="block font-serif text-5xl font-bold tracking-wide text-blush-logo sm:text-6xl">{site.title}</span>
     </a>
     {site.tagline && <p class="mt-2 text-sm uppercase tracking-[0.2em] text-ink/60">{site.tagline}</p>}
   </div>
